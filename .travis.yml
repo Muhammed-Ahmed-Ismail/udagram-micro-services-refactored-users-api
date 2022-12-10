@@ -1,0 +1,19 @@
+language: node_js
+
+node_js:
+  - 12
+
+install:
+  - echo "in the installation process"
+
+before_script:
+  - echo "before running the building script"
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+script:
+  - echo "Here we are building the image"
+  - docker build -t udagram-api-user .
+  - docker tag udagram-api-user muhammedismaildev/udagram-api-user:latest
+  # pushing the image to the docker reg
+  - docker push muhammedismaildev/udagram-api-user
+  - echo "image has been pushed"
