@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: udagram-api-user
+  name: udagram-api-user
+spec:
+  selector:
+    matchLabels:
+      service: udagram-api-user
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        service: udagram-api-user
+    spec:
+      containers:
+        - image: muhammedismaildev/udagram-api-user:latest
+          name: udagram-api-user
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "250m"
+            limits:
+              memory: "1024Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: env-secret
+            - configMapRef:
+                name: env-configmap
+          volumeMounts:
+            - name: aws-config-volume
+              mountPath: /root/.aws
+      restartPolicy: Always
+      volumes:
+        - name: aws-config-volume
+          secret:
+            secretName: aws-secret
+
